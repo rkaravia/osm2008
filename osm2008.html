@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OpenStreetMap 2008</title>
+<meta charset="utf-8">
+<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+<script type="text/javascript" src="leaflet-hash.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+<style>
+html, body, #map, #map2 { margin: 0; height: 100%; }
+.leaflet-container { background: white; }
+#full { position: absolute; bottom: 20px; left: 20px; z-index: 999; background: #fcc; font-size: 10pt; font-family: sans-serif; padding: 2px 4px; }
+#map, #map2 { width: 49%; }
+#map { float: left; margin-right: 2px; }
+</style>
+</head>
+<body>
+<!--div id="full">Database upgrade in progress, please come back in an hour.</div-->
+<div id="map"></div>
+<div id="map2"></div>
+<script>
+var center = [50, 15]; // [57.9, 34] for z6
+var map = L.map('map', { maxZoom: 18 }).setView(center, 4);
+map.attributionControl.setPrefix("");
+L.tileLayer('http://tile.osmz.ru/old/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+
+var map2 = L.map('map2', { maxZoom: 18, zoomControl: false }).setView(center, 4);
+map2.attributionControl.setPrefix("");
+L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map2);
+
+var move = true;
+map.on ('move', function() { if(move) { move=false; map2.setView(map.getCenter(), map.getZoom(),  { animate: false }); move=true; }});
+map2.on('move', function() { if(move) { move=false; map.setView(map2.getCenter(), map2.getZoom(), { animate: false }); move=true; }});
+
+var hash = new L.Hash(map);
+</script>
+</body>
+</html>
